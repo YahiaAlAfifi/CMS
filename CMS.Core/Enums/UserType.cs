@@ -4,6 +4,7 @@ namespace CMS.Core.Enums
     {
         Administrator = 1,
         ArticleAuthor = 2,
-        TrackAdministrator = 3
+        TrackAdministrator = 3,
+        AdvertisementOwner = 4
     }
 }
