@@ -1,8 +1,96 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "لوحة التحكم";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card card-custom bg-primary text-white">
+            <div class="card-body text-center">
+                <h2 class="text-white">@Model.NumberOfPosts</h2>
+                <span class="font-size-h5">الأخبار</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card card-custom bg-primary text-white">
+            <div class="card-body text-center">
+                <h2 class="text-white">@Model.NumberOfUsers</h2>
+                <span class="font-size-h5">المستخدمون</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card card-custom bg-primary text-white">
+            <div class="card-body text-center">
+                <h2 class="text-white">@Model.NumberOfTracks</h2>
+                <span class="font-size-h5">التسجيلات</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card card-custom bg-primary text-white">
+            <div class="card-body text-center">
+                <h2 class="text-white">@Model.NumberOfAdvertisements</h2>
+                <span class="font-size-h5">الإعلانات</span>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="row">
+    <div class="col-lg-6 mb-5">
+        <div class="card card-custom"><div class="card-body">
+            <canvas id="userTypeChart"></canvas>
+        </div></div>
+    </div>
+    <div class="col-lg-6 mb-5">
+        <div class="card card-custom"><div class="card-body">
+            <canvas id="contentTypeChart"></canvas>
+        </div></div>
+    </div>
+    <div class="col-12 mb-5">
+        <div class="card card-custom"><div class="card-body">
+            <canvas id="contentByMonthChart"></canvas>
+        </div></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+    <script>
+        function loadChart(url, elementId, chartType, title) {
+            $.get(url, function (result) {
+                var labels = [];
+                var values = [];
+                var colors = [];
+
+                for (var index = 0; index < result.length; index++) {
+                    labels.push(result[index].key);
+                    values.push(result[index].value);
+                    colors.push(result[index].color);
+                }
+
+                new Chart(document.getElementById(elementId), {
+                    type: chartType,
+                    data: {
+                        labels: labels,
+                        datasets: [{ data: values, backgroundColor: colors }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: { display: true, text: title },
+                            legend: { position: 'top' }
+                        }
+                    }
+                });
+            });
+        }
+
+        loadChart('/Home/GetUserTypeChartData', 'userTypeChart', 'pie', 'توزيع المستخدمين حسب النوع');
+        loadChart('/Home/GetContentTypeChartData', 'contentTypeChart', 'pie', 'المحتوى حسب النوع');
+        loadChart('/Home/GetContentByMonthChartData', 'contentByMonthChart', 'bar', 'المحتوى حسب أشهر السنة');
+    </script>
+}

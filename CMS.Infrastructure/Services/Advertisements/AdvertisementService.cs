@@ -1,4 +1,5 @@
 using AutoMapper;
+using CMS.Core.Constants;
 using CMS.Core.Dtos;
 using CMS.Core.Enums;
 using CMS.Core.Exceptions;
@@ -97,7 +98,7 @@ namespace CMS.Infrastructure.Services.Advertisements
 
             if (dto.Image != null)
             {
-                advertisement.ImageUrl = await _fileService.SaveFile(dto.Image, "Images");
+                advertisement.ImageUrl = await _fileService.SaveFile(dto.Image, FolderNames.ImagesFolder);
             }
 
             if (!string.IsNullOrWhiteSpace(dto.OwnerId))
@@ -116,6 +117,45 @@ namespace CMS.Infrastructure.Services.Advertisements
                 await _db.SaveChangesAsync();
             }
 
+            return advertisement.Id;
+        }
+
+        public async Task<UpdateAdvertisementDto> Get(int id)
+        {
+            var advertisement = await _db.Advertisements
+                .SingleOrDefaultAsync(x => x.Id == id && !x.IsDelete);
+
+            if (advertisement == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            return _mapper.Map<UpdateAdvertisementDto>(advertisement);
+        }
+
+        public async Task<int> Update(UpdateAdvertisementDto dto)
+        {
+            if (dto.StartDate >= dto.EndDate)
+            {
+                throw new InvalidDateException();
+            }
+
+            var advertisement = await _db.Advertisements
+                .SingleOrDefaultAsync(x => x.Id == dto.Id && !x.IsDelete);
+
+            if (advertisement == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            _mapper.Map(dto, advertisement);
+            if (dto.Image != null)
+            {
+                advertisement.ImageUrl = await _fileService.SaveFile(dto.Image, FolderNames.ImagesFolder);
+            }
+
+            _db.Advertisements.Update(advertisement);
+            await _db.SaveChangesAsync();
             return advertisement.Id;
         }
     }

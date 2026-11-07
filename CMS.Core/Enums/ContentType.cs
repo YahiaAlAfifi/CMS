@@ -2,6 +2,7 @@ namespace CMS.Core.Enums
 {
     public enum ContentType
     {
-        A = 1
+        Post = 1,
+        Track = 2
     }
 }

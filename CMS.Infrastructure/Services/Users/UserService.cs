@@ -2,6 +2,7 @@ using AutoMapper;
 using CMS.Core.Constants;
 using CMS.Core.Dtos;
 using CMS.Core.Exceptions;
+using CMS.Core.Enums;
 using CMS.Core.ViewModels;
 using CMS.Data;
 using CMS.Data.Models;
@@ -142,6 +143,15 @@ namespace CMS.Infrastructure.Services.Users
             }
 
             return _mapper.Map<UpdateUserDto>(user);
+        }
+
+        public async Task<List<UserViewModel>> GetAuthorList()
+        {
+            var authors = await _db.Users
+                .Where(x => !x.IsDelete && x.UserType == UserType.ArticleAuthor)
+                .ToListAsync();
+
+            return _mapper.Map<List<UserViewModel>>(authors);
         }
 
         private string GenratePassword()

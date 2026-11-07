@@ -33,6 +33,7 @@ namespace CMS.Infrastructure.Services
             if (file != null && file.Length > 0)
             {
                 var uploads = Path.Combine(_env.WebRootPath, folderName);
+                Directory.CreateDirectory(uploads);
                 fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
                 await using var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create);
                 await file.CopyToAsync(fileStream);
@@ -47,6 +48,7 @@ namespace CMS.Infrastructure.Services
             if (file != null && file.Length > 0)
             {
                 var uploads = Path.Combine(_env.WebRootPath, folderName);
+                Directory.CreateDirectory(uploads);
                 fileName = Guid.NewGuid().ToString().Replace("-", "") + extension;
                 await File.WriteAllBytesAsync(Path.Combine(uploads, fileName), file);
             }
@@ -62,6 +64,7 @@ namespace CMS.Infrastructure.Services
                 file = file.Substring(file.IndexOf(",", StringComparison.Ordinal) + 1);
                 var bytes = Convert.FromBase64String(file);
                 var uploads = Path.Combine(_env.WebRootPath, folderName);
+                Directory.CreateDirectory(uploads);
                 fileName = Guid.NewGuid().ToString().Replace("-", "") + extension;
                 await File.WriteAllBytesAsync(Path.Combine(uploads, fileName), bytes);
             }
