@@ -10,6 +10,8 @@ namespace CMS.Infrastructure.Services.Advertisements
         Task<ResponseDto> GetAll(Pagination pagination, Query query);
         Task<int> Delete(int id);
         Task<int> Create(CreateAdvertisementDto dto);
+        Task<UpdateAdvertisementDto> Get(int id);
+        Task<int> Update(UpdateAdvertisementDto dto);
         Task<List<UserViewModel>> GetAdvertisementOwners();
     }
 }

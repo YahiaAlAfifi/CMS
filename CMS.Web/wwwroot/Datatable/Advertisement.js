@@ -33,11 +33,13 @@ var AdvertisementDatatable = function () {
                     field: 'Actions',
                     title: 'العمليات',
                     sortable: false,
-                    width: 80,
+                    width: 125,
                     overflow: 'visible',
                     autoHide: false,
                     template: function (data) {
-                        return '<a href="/Advertisement/Delete/' + data.id + '" tname="#kt_datatable" class="Confirm btn btn-sm btn-clean btn-icon" title="حذف">' +
+                        return '<a href="/Advertisement/Update/' + data.id + '" class="PopUp btn btn-sm btn-clean btn-icon mr-2" title="تعديل الاعلان">' +
+                            '<i class="la la-edit text-warning"></i></a>' +
+                            '<a href="/Advertisement/Delete/' + data.id + '" tname="#kt_datatable" class="Confirm btn btn-sm btn-clean btn-icon" title="حذف">' +
                             '<span class="svg-icon svg-icon-danger svg-icon-md">' +
                             '<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">' +
                             '<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">' +

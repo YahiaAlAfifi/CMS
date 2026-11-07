@@ -65,6 +65,42 @@ namespace CMS.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            ViewData["owners"] = new SelectList(
+                await _advertisementService.GetAdvertisementOwners(),
+                "Id",
+                "FullName");
+
+            return View(await _advertisementService.Get(id));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UpdateAdvertisementDto dto)
+        {
+            if (!string.IsNullOrWhiteSpace(dto.OwnerId))
+            {
+                ModelState.Remove("Owner.FullName");
+                ModelState.Remove("Owner.Email");
+                ModelState.Remove("Owner.PhoneNumber");
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _advertisementService.Update(dto);
+                return Ok(Results.EditSuccessResult());
+            }
+
+            ViewData["owners"] = new SelectList(
+                await _advertisementService.GetAdvertisementOwners(),
+                "Id",
+                "FullName",
+                dto.OwnerId);
+
+            return View(dto);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             await _advertisementService.Delete(id);
