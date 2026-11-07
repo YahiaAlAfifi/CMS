@@ -1,0 +1,31 @@
+@{
+    ViewData["Title"] = "ادارة الاخبار";
+}
+
+<div class="card card-custom">
+    <div class="card-header flex-wrap border-0 pt-6 pb-0">
+        <div class="card-title"><h2 class="card-label">ادارة الاخبار</h2></div>
+        <div class="card-toolbar">
+            <a href="~/Post/Create" title="اضافة خبر" class="PopUp btn btn-primary font-weight-bolder">
+                <i class="la la-plus"></i> اضافة
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="mb-7">
+            <div class="row align-items-center">
+                <div class="col-lg-4 col-xl-4">
+                    <div class="input-icon">
+                        <input type="text" class="form-control" placeholder="أبحث.." id="kt_datatable_search_query" />
+                        <span><i class="flaticon2-search-1 text-muted"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Datatable/Post.js"></script>
+}

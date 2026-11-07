@@ -5,6 +5,7 @@ using CMS.Infrastructure.Middlewares;
 using CMS.Infrastructure.Services;
 using CMS.Infrastructure.Services.Advertisements;
 using CMS.Infrastructure.Services.Categories;
+using CMS.Infrastructure.Services.Posts;
 using CMS.Infrastructure.Services.Tracks;
 using CMS.Infrastructure.Services.Users;
 using Microsoft.AspNetCore.Identity;
@@ -36,6 +37,7 @@ builder.Services.AddTransient<IFileService, FileService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAdvertisementService, AdvertisementService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddTransient<ITrackService, TrackService>();
 builder.Services.AddControllersWithViews();
 
