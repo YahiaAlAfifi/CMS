@@ -4,7 +4,8 @@
 
 - `feature/task21-ads-posts-charts`
 - Based on local `main` at `197930c` (`Merge Task 20 feature branch`).
-- A remote refresh was attempted before implementation, but GitHub was unreachable from the environment (`Could not resolve host: github.com`).
+- A remote refresh was attempted before implementation, but GitHub was temporarily unreachable from the environment (`Could not resolve host: github.com`). Connectivity later recovered and the completed branch was pushed successfully.
+- Pull request: <https://github.com/YahiaAlAfifi/Task-20-DataTables-AutoMapper-Toastr-Ads/pull/2>
 
 ## Lecture review
 
@@ -75,8 +76,7 @@ Temporary frames, screenshots, contact sheets, and smoke-test logs were kept out
 - `git diff --check` — passed.
 - No lecture-analysis images, videos, frames, or logs are tracked by Git.
 
-## Remaining external steps
+## Remaining local configuration
 
 - Provide or initialize the configured `CMS.Web` database to run data-backed UI CRUD tests locally.
 - Configure SMTP credentials to exercise the Post status email notification.
-- Push the feature branch and open a pull request when GitHub connectivity is available.
