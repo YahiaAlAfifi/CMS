@@ -1,14 +1,38 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using CMS.Web.Models;
+using CMS.Infrastructure.Services.Dashboard;
+using System.Threading.Tasks;
 
 namespace CMS.Web.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly IDashboardService _dashboardService;
+
+    public HomeController(IDashboardService dashboardService)
     {
-        return View();
+        _dashboardService = dashboardService;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        return View(await _dashboardService.GetData());
+    }
+
+    public async Task<IActionResult> GetUserTypeChartData()
+    {
+        return Ok(await _dashboardService.GetUserTypeChart());
+    }
+
+    public async Task<IActionResult> GetContentTypeChartData()
+    {
+        return Ok(await _dashboardService.GetContentTypeChart());
+    }
+
+    public async Task<IActionResult> GetContentByMonthChartData()
+    {
+        return Ok(await _dashboardService.GetContentByMonthChart());
     }
 
     public IActionResult Privacy()
