@@ -10,7 +10,7 @@ using Results = CMS.Core.Constants.Results;
 
 namespace CMS.Web.Controllers
 {
-    public class PostController : Controller
+    public class PostController : BaseController
     {
         private readonly IPostService _postService;
         private readonly ICategoryService _categoryService;

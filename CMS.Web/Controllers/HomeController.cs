@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Web.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController
 {
     private readonly IDashboardService _dashboardService;
 

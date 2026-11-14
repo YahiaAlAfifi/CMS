@@ -8,7 +8,7 @@ using Results = CMS.Core.Constants.Results;
 
 namespace CMS.Web.Controllers
 {
-    public class TrackController : Controller
+    public class TrackController : BaseController
     {
         private readonly ITrackService _trackService;
         private readonly ICategoryService _categoryService;

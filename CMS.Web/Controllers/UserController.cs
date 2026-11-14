@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Web.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         private readonly IUserService _userService;
 
