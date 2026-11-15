@@ -8,11 +8,9 @@ namespace CMS.Web.Controllers
 {
     public class UserController : BaseController
     {
-        private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService):base(userService) 
         {
-            _userService = userService;
         }
 
         [HttpGet]

@@ -240,7 +240,7 @@
                             <div class="topbar-item">
                                 <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2" id="kt_quick_user_toggle">
                                     <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">أهلا بك يا,</span>
-                                    <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">أحمد </span>
+                                    <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">@ViewBag.fullName </span>
 
                                 </div>
                             </div>
@@ -286,14 +286,16 @@
             <!--begin::Header-->
             <div class="d-flex align-items-center mt-5">
                 <div class="symbol symbol-100 mr-5">
-                    <div class="symbol-label" style="background-image: url('/images/')"></div>
+                    <div class="symbol-label" style="background-image: url('/images/@ViewBag.image')"></div>
                     <i class="symbol-badge bg-success"></i>
                 </div>
                 <div class="d-flex flex-column">
-                    <a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">Ahmed Shalayel</a>
-                    <div class="text-muted mt-1">Admin</div>
+                    <a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">@ViewBag.fullName</a>
+                    <div class="text-muted mt-1">@ViewBag.UserType</div>
                     <div class="navi mt-2">
-                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/Identity/Account/Login" )">
+                        <form asp-area="Identity"
+                              asp-page="/Account/Logout"
+                              asp-route-returnUrl="/Identity/Account/Login">
                             <button type="submit" class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5">تسجيل الخروج</button>
                         </form>
                     </div>

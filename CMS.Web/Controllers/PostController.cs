@@ -14,16 +14,15 @@ namespace CMS.Web.Controllers
     {
         private readonly IPostService _postService;
         private readonly ICategoryService _categoryService;
-        private readonly IUserService _userService;
+
 
         public PostController(
             IPostService postService,
             ICategoryService categoryService,
-            IUserService userService)
+            IUserService userService) : base(userService)
         {
             _postService = postService;
             _categoryService = categoryService;
-            _userService = userService;
         }
 
         [HttpGet]

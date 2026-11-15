@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using CMS.Web.Models;
 using CMS.Infrastructure.Services.Dashboard;
 using System.Threading.Tasks;
+using CMS.Infrastructure.Services.Users;
 
 namespace CMS.Web.Controllers;
 
@@ -10,7 +11,9 @@ public class HomeController : BaseController
 {
     private readonly IDashboardService _dashboardService;
 
-    public HomeController(IDashboardService dashboardService)
+    public HomeController(
+        IDashboardService dashboardService,
+        IUserService userService) : base(userService)
     {
         _dashboardService = dashboardService;
     }

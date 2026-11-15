@@ -145,6 +145,19 @@ namespace CMS.Infrastructure.Services.Users
             return _mapper.Map<UpdateUserDto>(user);
         }
 
+        public UserViewModel GetUserByUsername(string username)
+        {
+            var user = _db.Users.SingleOrDefault(
+                x => x.UserName == username && !x.IsDelete);
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            return _mapper.Map<UserViewModel>(user);
+        }
+
         public async Task<List<UserViewModel>> GetAuthorList()
         {
             var authors = await _db.Users
