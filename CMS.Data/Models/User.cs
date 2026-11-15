@@ -12,6 +12,8 @@ namespace CMS.Data.Models
         public string FullName { get; set; }
         public DateTime? DOB { get; set; }
         public string ImageUrl { get; set; }
+        public string FCMToken { get; set; }
+
         public UserType UserType { get; set; }
         public bool IsDelete { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -24,5 +26,7 @@ namespace CMS.Data.Models
         public List<Advertisement> Advertisements { get; set; }
         public List<Email> Emails { get; set; }
         public List<Notification> Notifications { get; set; }
+
+
     }
 }

@@ -68,5 +68,13 @@ namespace CMS.Web.Controllers
             await _userService.Delete(id);
             return Ok(Results.DeleteSuccessResult());
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AddFCM(string fcm)
+        {
+            await _userService.SetFCMToUser(userId, fcm);
+
+            return Ok("Updated FCM User");
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace CMS.Infrastructure.Services.Users
         Task<UpdateUserDto> Get(string Id);
         Task<List<UserViewModel>> GetAuthorList();
         UserViewModel GetUserByUsername(string username);
+        Task<string> SetFCMToUser(string userId, string fcmToken);
     }
 }
