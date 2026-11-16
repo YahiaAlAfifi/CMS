@@ -11,9 +11,16 @@ using CMS.Infrastructure.Services.Tracks;
 using CMS.Infrastructure.Services.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using CMS.Infrastructure.Services.Notifications;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 
 var builder = WebApplication.CreateBuilder(args);
+FirebaseApp.Create(new AppOptions
+{
+    Credential = GoogleCredential.GetApplicationDefault()
+});
 
 builder.Services.AddDbContext<CMSDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -36,16 +43,18 @@ builder.Services.AddIdentity<User, IdentityRole>(config =>
 
 builder.Services.AddRazorPages();
 builder.Services.AddAutoMapper(_ => { }, typeof(MapperProfile).Assembly);
+
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IFileService, FileService>();
+builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAdvertisementService, AdvertisementService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IDashboardService, DashboardService>();
 builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddTransient<ITrackService, TrackService>();
-builder.Services.AddControllersWithViews();
 
+builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

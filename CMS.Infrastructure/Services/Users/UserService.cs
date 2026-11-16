@@ -6,6 +6,7 @@ using CMS.Core.Enums;
 using CMS.Core.ViewModels;
 using CMS.Data;
 using CMS.Data.Models;
+using CMS.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -165,6 +166,30 @@ namespace CMS.Infrastructure.Services.Users
                 .ToListAsync();
 
             return _mapper.Map<List<UserViewModel>>(authors);
+        }
+
+        public async Task<byte[]> ExportToExcel()
+        {
+            var users = await _db.Users
+                .Where(x => !x.IsDelete)
+                .ToListAsync();
+
+            return ExcelHelpers.ToExcel(
+                new Dictionary<string, ExcelColumn>
+                {
+                    { "FullName", new ExcelColumn("FullName", 0) },
+                    { "Email", new ExcelColumn("Email", 1) },
+                    { "Phone", new ExcelColumn("Phone", 2) }
+                },
+                users.Select(x => new ExcelRow
+                {
+                    Values = new Dictionary<string, string>
+                    {
+                        { "FullName", x.FullName },
+                        { "Email", x.Email },
+                        { "Phone", x.PhoneNumber }
+                    }
+                }).ToList());
         }
 
         private string GenratePassword()

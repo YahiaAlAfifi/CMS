@@ -19,6 +19,15 @@ namespace CMS.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ExportToExcel()
+        {
+            return File(
+                await _userService.ExportToExcel(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "users.xlsx");
+        }
+
         public async Task<JsonResult> GetUserData(Pagination pagination, Query query)
         {
             var result = await _userService.GetAll(pagination, query);

@@ -85,6 +85,13 @@ namespace CMS.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> RemoveAttachment(int id)
+        {
+            await _postService.RemoveAttachment(id);
+            return Ok(Results.DeleteSuccessResult());
+        }
+
+        [HttpGet]
         public async Task<IActionResult> UpdateStatus(int id, ContentStatus status)
         {
             await _postService.UpdateStatus(id, status);
