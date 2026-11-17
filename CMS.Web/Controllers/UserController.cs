@@ -6,19 +6,26 @@ using System.Threading.Tasks;
 
 namespace CMS.Web.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
-        private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService):base(userService) 
         {
-            _userService = userService;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportToExcel()
+        {
+            return File(
+                await _userService.ExportToExcel(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "users.xlsx");
         }
 
         public async Task<JsonResult> GetUserData(Pagination pagination, Query query)
@@ -69,6 +76,14 @@ namespace CMS.Web.Controllers
         {
             await _userService.Delete(id);
             return Ok(Results.DeleteSuccessResult());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddFCM(string fcm)
+        {
+            await _userService.SetFCMToUser(userId, fcm);
+
+            return Ok("Updated FCM User");
         }
     }
 }

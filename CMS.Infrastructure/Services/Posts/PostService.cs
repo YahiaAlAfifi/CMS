@@ -6,6 +6,7 @@ using CMS.Core.Exceptions;
 using CMS.Core.ViewModels;
 using CMS.Data;
 using CMS.Data.Models;
+using CMS.Infrastructure.Services.Notifications;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +20,20 @@ namespace CMS.Infrastructure.Services.Posts
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
         private readonly IEmailService _emailService;
+        private readonly INotificationService _notificationService;
 
         public PostService(
             CMSDbContext db,
             IMapper mapper,
             IFileService fileService,
-            IEmailService emailService)
+            IEmailService emailService,
+            INotificationService notificationService)
         {
             _db = db;
             _mapper = mapper;
             _fileService = fileService;
             _emailService = emailService;
+            _notificationService = notificationService;
         }
 
         public async Task<ResponseDto> GetAll(Pagination pagination, Query query)
@@ -65,13 +69,17 @@ namespace CMS.Infrastructure.Services.Posts
 
         public async Task<UpdatePostDto> Get(int id)
         {
-            var post = await _db.Posts.SingleOrDefaultAsync(x => x.Id == id && !x.IsDelete);
+            var post = await _db.Posts
+                .Include(x => x.Attachments)
+                .SingleOrDefaultAsync(x => x.Id == id && !x.IsDelete);
             if (post == null)
             {
                 throw new EntityNotFoundException();
             }
 
-            return _mapper.Map<UpdatePostDto>(post);
+            var dto = _mapper.Map<UpdatePostDto>(post);
+            dto.PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(post.Attachments);
+            return dto;
         }
 
         public async Task<int> Create(CreatePostDto dto)
@@ -114,6 +122,19 @@ namespace CMS.Infrastructure.Services.Posts
             return post.Id;
         }
 
+        public async Task<int> RemoveAttachment(int id)
+        {
+            var attachment = await _db.PostAttachments.SingleOrDefaultAsync(x => x.Id == id);
+            if (attachment == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            _db.PostAttachments.Remove(attachment);
+            await _db.SaveChangesAsync();
+            return attachment.Id;
+        }
+
         public async Task<int> UpdateStatus(int id, ContentStatus status)
         {
             var post = await _db.Posts
@@ -145,6 +166,19 @@ namespace CMS.Infrastructure.Services.Posts
                     post.Author.Email,
                     "Post status updated",
                     $"Your post '{post.Title}' status has changed to {status}.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(post.Author?.FCMToken))
+            {
+                await _notificationService.SendByFCM(
+                    post.Author.FCMToken,
+                    new NotificationDto
+                    {
+                        Title = "Post status updated",
+                        Body = $"Your post '{post.Title}' status has changed to {status}.",
+                        Action = NotificationAction.General,
+                        ActionId = post.Id.ToString()
+                    });
             }
 
             return post.Id;

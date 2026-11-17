@@ -4,14 +4,17 @@ using CMS.Infrastructure.Services.Advertisements;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using CMS.Infrastructure.Services.Users;
 
 namespace CMS.Web.Controllers
 {
-    public class AdvertisementController : Controller
+    public class AdvertisementController : BaseController
     {
         private readonly IAdvertisementService _advertisementService;
 
-        public AdvertisementController(IAdvertisementService advertisementService)
+        public AdvertisementController(
+            IAdvertisementService advertisementService,
+            IUserService userService) : base(userService)
         {
             _advertisementService = advertisementService;
         }

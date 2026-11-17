@@ -1,4 +1,4 @@
-﻿@{
+﻿    @{
     string Action = null;
     string Controller = null;
     string currentURL = null;
@@ -240,7 +240,7 @@
                             <div class="topbar-item">
                                 <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2" id="kt_quick_user_toggle">
                                     <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">أهلا بك يا,</span>
-                                    <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">أحمد </span>
+                                    <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">@ViewBag.fullName </span>
 
                                 </div>
                             </div>
@@ -286,14 +286,16 @@
             <!--begin::Header-->
             <div class="d-flex align-items-center mt-5">
                 <div class="symbol symbol-100 mr-5">
-                    <div class="symbol-label" style="background-image: url('/images/')"></div>
+                    <div class="symbol-label" style="background-image: url('/images/@ViewBag.image')"></div>
                     <i class="symbol-badge bg-success"></i>
                 </div>
                 <div class="d-flex flex-column">
-                    <a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">Ahmed Shalayel</a>
-                    <div class="text-muted mt-1">Admin</div>
+                    <a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">@ViewBag.fullName</a>
+                    <div class="text-muted mt-1">@ViewBag.UserType</div>
                     <div class="navi mt-2">
-                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/Identity/Account/Login" )">
+                        <form asp-area="Identity"
+                              asp-page="/Account/Logout"
+                              asp-route-returnUrl="/Identity/Account/Login">
                             <button type="submit" class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5">تسجيل الخروج</button>
                         </form>
                     </div>
@@ -359,6 +361,89 @@
 
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script type="module">
+            import {
+                initializeApp
+            } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+            import {
+                getMessaging,
+                onRegistered,
+                register,
+                onMessage
+            } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-messaging.js";
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyDYmOrv-5ANKBq5VorLdbPacRQ_u0KvwGo",
+                authDomain: "cms-task22.firebaseapp.com",
+                projectId: "cms-task22",
+                storageBucket: "cms-task22.firebasestorage.app",
+                messagingSenderId: "144044704529",
+                appId: "1:144044704529:web:733ced0efc0696824d02b0"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const messaging = getMessaging(app);
+
+            async function initializeNotifications() {
+                try {
+                    if (!("serviceWorker" in navigator) ||
+                        !("Notification" in window)) {
+                        console.log("Notifications are not supported.");
+                        return;
+                    }
+
+                    const registration =
+                        await navigator.serviceWorker.register(
+                            "/firebase-messaging-sw.js");
+
+                    let permission = Notification.permission;
+
+                    if (permission === "default") {
+                        permission = await Notification.requestPermission();
+                    }
+
+                    if (permission !== "granted") {
+                        console.log("Notification permission was not granted.");
+                        return;
+                    }
+
+                    onRegistered(messaging, async (installationId) => {
+                        const response = await fetch(
+                            `/User/AddFCM?fcm=${encodeURIComponent(installationId)}`,
+                            {
+                                method: "GET",
+                                credentials: "same-origin"
+                            });
+
+                        if (!response.ok) {
+                            console.error("Could not save the Firebase installation ID.");
+                            return;
+                        }
+
+                        console.log("Firebase installation ID saved successfully.");
+                    });
+
+                    await register(messaging, {
+                        vapidKey:
+                            "BHLcmdkaUPq3IjzVDLb_Drw-zZN6zgvM-djHxYz6Py4fhQpk0gp2L0JKhzGUpOlQmBIja1EzoAEPs1H0hVNReKo",
+                        serviceWorkerRegistration: registration
+                    });
+                }
+                catch (error) {
+                    console.error("Firebase notification error:", error);
+                }
+            }
+
+            onMessage(messaging, (payload) => {
+                const title = payload.data?.Title ?? "CMS";
+                const body = payload.data?.Body ?? "";
+
+                new Notification(title, { body });
+            });
+
+            initializeNotifications();
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

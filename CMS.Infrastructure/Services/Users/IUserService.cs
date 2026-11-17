@@ -13,5 +13,8 @@ namespace CMS.Infrastructure.Services.Users
         Task<string> Delete(string Id);
         Task<UpdateUserDto> Get(string Id);
         Task<List<UserViewModel>> GetAuthorList();
+        UserViewModel GetUserByUsername(string username);
+        Task<byte[]> ExportToExcel();
+        Task<string> SetFCMToUser(string userId, string fcmToken);
     }
 }

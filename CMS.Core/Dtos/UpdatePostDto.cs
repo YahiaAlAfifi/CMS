@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using CMS.Core.ViewModels;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -30,5 +31,7 @@ namespace CMS.Core.Dtos
 
         [Display(Name = "المرفقات")]
         public List<IFormFile> Attachments { get; set; }
+
+        public List<PostAttachmentViewModel> PostAttachments { get; set; }
     }
 }

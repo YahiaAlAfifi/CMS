@@ -10,20 +10,19 @@ using Results = CMS.Core.Constants.Results;
 
 namespace CMS.Web.Controllers
 {
-    public class PostController : Controller
+    public class PostController : BaseController
     {
         private readonly IPostService _postService;
         private readonly ICategoryService _categoryService;
-        private readonly IUserService _userService;
+
 
         public PostController(
             IPostService postService,
             ICategoryService categoryService,
-            IUserService userService)
+            IUserService userService) : base(userService)
         {
             _postService = postService;
             _categoryService = categoryService;
-            _userService = userService;
         }
 
         [HttpGet]
@@ -82,6 +81,13 @@ namespace CMS.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             await _postService.Delete(id);
+            return Ok(Results.DeleteSuccessResult());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RemoveAttachment(int id)
+        {
+            await _postService.RemoveAttachment(id);
             return Ok(Results.DeleteSuccessResult());
         }
 

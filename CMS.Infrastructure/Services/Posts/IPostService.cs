@@ -13,6 +13,7 @@ namespace CMS.Infrastructure.Services.Posts
         Task<int> Create(CreatePostDto dto);
         Task<int> Update(UpdatePostDto dto);
         Task<int> Delete(int id);
+        Task<int> RemoveAttachment(int id);
         Task<int> UpdateStatus(int id, ContentStatus status);
         Task<List<ContentChangeLogViewModel>> GetLog(int id);
     }

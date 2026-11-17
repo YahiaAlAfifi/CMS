@@ -6,6 +6,7 @@ using CMS.Core.Enums;
 using CMS.Core.ViewModels;
 using CMS.Data;
 using CMS.Data.Models;
+using CMS.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -145,6 +146,19 @@ namespace CMS.Infrastructure.Services.Users
             return _mapper.Map<UpdateUserDto>(user);
         }
 
+        public UserViewModel GetUserByUsername(string username)
+        {
+            var user = _db.Users.SingleOrDefault(
+                x => x.UserName == username && !x.IsDelete);
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            return _mapper.Map<UserViewModel>(user);
+        }
+
         public async Task<List<UserViewModel>> GetAuthorList()
         {
             var authors = await _db.Users
@@ -154,9 +168,51 @@ namespace CMS.Infrastructure.Services.Users
             return _mapper.Map<List<UserViewModel>>(authors);
         }
 
+        public async Task<byte[]> ExportToExcel()
+        {
+            var users = await _db.Users
+                .Where(x => !x.IsDelete)
+                .ToListAsync();
+
+            return ExcelHelpers.ToExcel(
+                new Dictionary<string, ExcelColumn>
+                {
+                    { "FullName", new ExcelColumn("FullName", 0) },
+                    { "Email", new ExcelColumn("Email", 1) },
+                    { "Phone", new ExcelColumn("Phone", 2) }
+                },
+                users.Select(x => new ExcelRow
+                {
+                    Values = new Dictionary<string, string>
+                    {
+                        { "FullName", x.FullName },
+                        { "Email", x.Email },
+                        { "Phone", x.PhoneNumber }
+                    }
+                }).ToList());
+        }
+
         private string GenratePassword()
         {
             return Guid.NewGuid().ToString().Substring(1, 8);
+        }
+
+        public async Task<string> SetFCMToUser(string userId, string fcmToken)
+        {
+            var user = _db.Users.SingleOrDefault(
+                x => x.Id == userId && !x.IsDelete);
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            user.FCMToken = fcmToken;
+
+            _db.Users.Update(user);
+            await _db.SaveChangesAsync();
+
+            return user.Id;
         }
     }
 }
