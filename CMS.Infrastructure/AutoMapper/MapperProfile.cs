@@ -31,6 +31,9 @@ namespace CMS.Infrastructure.AutoMapper
                 .ForMember(x => x.Image, x => x.Ignore());
 
             CreateMap<Category, CategoryViewModel>();
+            CreateMap<CreateCategoryDto, Category>();
+            CreateMap<UpdateCategoryDto, Category>();
+            CreateMap<Category, UpdateCategoryDto>();
             CreateMap<Track, TrackViewModel>()
                 .ForMember(x => x.CreatedAt, x => x.MapFrom(x => x.CreatedAt.ToString("yyyy:MM:dd")));
             CreateMap<CreateTrackDto, Track>()
